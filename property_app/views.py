@@ -5,6 +5,7 @@ from rest_framework import status,generics
 from .models import Property, PropertyImage
 from .serializers import PropertySerializer,ProperyImageSerializer
 from django.http import Http404
+from user_app.views import IsAgent
 # Create your views here.
 
 
@@ -13,6 +14,7 @@ class PropertyView(generics.ListCreateAPIView):
     serializer_class= PropertySerializer
 
 class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
+     permission_classes=[IsAgent]
      queryset = Property.objects.all()
      serializer_class= PropertySerializer
      lookup_field="pk"
