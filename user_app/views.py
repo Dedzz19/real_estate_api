@@ -5,8 +5,8 @@ from rest_framework import status, generics, mixins,permissions
 from .serializers import AgentSerializer
 from .models import Agent
 from django.http import Http404
-from rest_framework.permissions import IsAuthenticated
-# from django.contrib.auth.decorators import login_required, user_passes_test
+from rest_framework.permissions import IsAuthenticated,AllowAny
+
 
 class IsAgent(permissions.BasePermission):
     """
@@ -21,12 +21,6 @@ class IsAgent(permissions.BasePermission):
 # Create agent account (Authenticated)
 class CreateAgent(APIView):
     permission_classes=[IsAuthenticated]
-
-    def get(self, request):
-        agents=Agent.objects.all()
-        serializer=AgentSerializer(agents, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
     def post(self, request):
         serializer=AgentSerializer(data=request.data)
         if serializer.is_valid():
@@ -64,6 +58,7 @@ class AgentDetail(APIView):
 
 
 class Get_agents(generics.ListAPIView):
+    permission_classes=[AllowAny]
     serializer_class=AgentSerializer
     queryset=Agent.objects.all()
 

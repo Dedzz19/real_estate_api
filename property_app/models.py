@@ -17,7 +17,6 @@ class Property(models.Model):
     property_type=models.CharField(max_length=100,choices=PROPERTY_TYPES)
     price = models.DecimalField(decimal_places=2, max_digits=8)
     agent=models.ForeignKey(Agent,on_delete=models.CASCADE, related_name="property")
-
     def __str__(self):
        return f'{self.title} by {self.agent}'
     

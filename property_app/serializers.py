@@ -7,7 +7,7 @@ from user_app.serializers import AgentSerializer
 class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         model=Property
-        fields=['id','title','address','description','property_type','price','agent']
+        fields='__all__'
 
 
 class ProperyImageSerializer(serializers.ModelSerializer):

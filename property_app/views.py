@@ -6,19 +6,46 @@ from .models import Property, PropertyImage
 from .serializers import PropertySerializer,ProperyImageSerializer
 from django.http import Http404
 from user_app.views import IsAgent
+from django.contrib.auth.models import User
 # Create your views here.
 
-
-class PropertyView(generics.ListCreateAPIView):
+# List Property for Authenticated Users
+class PropertyView(generics.ListAPIView):
     queryset = Property.objects.all()
     serializer_class= PropertySerializer
 
-class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
-     permission_classes=[IsAgent]
+class PropertyDetailView(generics.RetrieveAPIView):
      queryset = Property.objects.all()
      serializer_class= PropertySerializer
      lookup_field="pk"
 
+class PropertyUpdateView(APIView):
+    permission_classes=[IsAgent]
+    def get_property(self, request, id):
+            user=User.objects.get(username=request.user.username)
+            item=Property.objects.get(id=id)
+            agent=item.agent.user.username
+            if agent == user.username:
+                return item
+            raise Http404
+    
+    def get(self, request, pk):
+        item= self.get_property(request, id=pk)
+        serializer=PropertySerializer(item)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self,request,pk):
+        item= self.get_property(request, id=pk)
+        serializer=PropertySerializer(Property,data=request.data)
+        if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request,pk):
+        item= self.get_property(request, id=pk)
+        item.delete()
+        return Response("Item deleted successfully", status=status.HTTP_200_OK )
 
 class AgentProperty(APIView):
     def get_agent(self,id):
