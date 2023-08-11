@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics, mixins,permissions
 from .serializers import AgentSerializer
 from .models import Agent
+from django.contrib.auth.models import User
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticated,AllowAny
 
@@ -30,7 +31,6 @@ class CreateAgent(APIView):
 
 
 class AgentDetail(APIView):
-    permission_classes=[IsAgent]
     def get_agent(self, id):
         try:
             item=Agent.objects.filter(id=id)
@@ -64,3 +64,30 @@ class Get_agents(generics.ListAPIView):
 
 
 
+class UpdateDetails(APIView):
+    permission_classes=[IsAgent]
+    def get_agent(self, request, id):
+        user=User.objects.get(id=request.user.id)
+        item=Agent.objects.get(id=id)
+        agent=item.user
+        if agent == user:
+            return item
+        raise Http404
+    
+    def get(self,request, pk):
+        agent = self.get_agent(request, id=pk)
+        serializer = AgentSerializer(agent)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def put(self,request, pk):
+        agent = self.get_agent(request, id=pk)
+        serializer=AgentSerializer(agent, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        agent=self.get_agent(request, id=pk)
+        agent.delete()
+        return Response("Deleted", status=status.HTTP_204_NO_CONTENT)
