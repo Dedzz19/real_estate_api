@@ -92,8 +92,8 @@ class FullDetails(APIView):
         serializer=ProperyImageSerializer(item, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
-# To see images based on their images
-class GetPropertyImages(APIView):
+# To see images based on their property id
+class RetrievePropertyimage(APIView):
     def get_image(self,id):
         try:
             items = PropertyImage.objects.filter(property__id=id)
@@ -106,3 +106,7 @@ class GetPropertyImages(APIView):
         serializer=ProperyImageSerializer(items, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
+
+class GetPropertyImage(generics.ListAPIView):
+    queryset=PropertyImage.objects.all()
+    lookup_field='pk'
