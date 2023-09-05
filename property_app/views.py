@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status,generics
+from rest_framework import status,generics,viewsets
 from .models import Property, PropertyImage
 from .serializers import PropertySerializer,ProperyImageSerializer
 from django.http import Http404
@@ -110,3 +110,10 @@ class RetrievePropertyimage(APIView):
 class GetPropertyImage(generics.ListAPIView):
     queryset=PropertyImage.objects.all()
     lookup_field='pk'
+
+
+# Handling pictures
+
+class YourModelViewSet(viewsets.ModelViewSet):
+    queryset = PropertyImage.objects.all()
+    serializer_class = ProperyImageSerializer
