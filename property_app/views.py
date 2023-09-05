@@ -91,3 +91,18 @@ class FullDetails(APIView):
         item =PropertyImage.objects.filter(property=pk)
         serializer=ProperyImageSerializer(item, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+    
+# To see images based on their images
+class GetPropertyImages(APIView):
+    def get_image(self,id):
+        try:
+            items = PropertyImage.objects.filter(property__id=id)
+            return items
+        except:
+            raise Http404
+    
+    def get(self, request, pk):
+        items=self.get_image(id=pk)
+        serializer=ProperyImageSerializer(items, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    
