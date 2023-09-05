@@ -1,5 +1,6 @@
 from django.db import models
 from user_app.models import Agent
+from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
 
@@ -31,7 +32,7 @@ class Property(models.Model):
 
 class PropertyImage(models.Model):
     property= models.ForeignKey(Property, on_delete=models.CASCADE, related_name='images', null=True, blank=True)
-    image = models.ImageField(upload_to='property_images/')
+    image = models.ImageField(_("image"), upload_to='property_images/')
 
     def __str__(self):
         return f"{self.property.title}"
