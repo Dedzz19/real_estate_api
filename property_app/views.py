@@ -111,9 +111,3 @@ class GetPropertyImage(generics.ListAPIView):
     queryset=PropertyImage.objects.all()
     serializer_class=ProperyImageSerializer
 
-
-# Handling pictures
-
-class YourModelViewSet(viewsets.ModelViewSet):
-    queryset = PropertyImage.objects.all()
-    serializer_class = ProperyImageSerializer
