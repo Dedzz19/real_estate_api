@@ -109,7 +109,7 @@ class RetrievePropertyimage(APIView):
 
 class GetPropertyImage(generics.ListAPIView):
     queryset=PropertyImage.objects.all()
-    lookup_field='pk'
+    serializer_class=ProperyImageSerializer
 
 
 # Handling pictures
